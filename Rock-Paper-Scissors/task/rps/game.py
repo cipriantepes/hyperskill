@@ -1,32 +1,64 @@
 # Write your code here
 import random
-options = ['rock', 'paper', 'scissors']
 
 
-def play():
+class RockPaperScissors:
+    options = ['rock', 'paper', 'scissors']
+    # user_name = ''
 
-    while True:
-        pick = input()
+    def __init__(self):
+        self.user_name = input('Enter your name: ')
+        self.user_rating = 0
 
-        if pick == '!exit':
-            print('Bye!')
-            return False
+        self.greet()
+        self.ratings(self.user_name)
+        self.play()
 
-        if pick not in options:
-            print('Invalid input')
-            continue
+    def greet(self):
+        print(f'Hello {self.user_name}')
 
-        random.seed()
-        computer = random.randint(0, 2)
-        user = options.index(pick)
+    def ratings(self, user_name=''):
+        ratings = open('./rating.txt', 'r+')
+        if ratings.read().find(user_name) != 0:
+            return ratings.close()
 
-        if computer == user:
-            print(f'There is a draw {options[user]}')
+        for line in ratings:
+            if line.find(user_name) != -1:
+                # print(user_name)
+                self.user_rating = int(line.split()[1].rstrip('\n'))
+        ratings.close()
 
-        if computer - 1 == user or computer == user - 2:
-            print(f'Sorry, but computer chose {options[computer]}')
+    def play(self):
 
-        if computer + 1 == user or computer - 2 == user:
-            print(f'Well done. Computer chose {options[computer]}')
+        while True:
+            pick = input()
 
-play()
+            if pick == '!exit':
+                print('Bye!')
+                return False
+
+            if pick == '!rating':
+                print(f'Your rating: {self.user_rating}')
+                continue
+
+            if pick not in self.options:
+                print('Invalid input')
+                continue
+
+            random.seed()
+            computer = random.randint(0, 2)
+            user = self.options.index(pick)
+
+            if computer == user:
+                print(f'There is a draw {self.options[user]}')
+                self.user_rating += 50
+
+            if computer - 1 == user or computer == user - 2:
+                print(f'Sorry, but computer chose {self.options[computer]}')
+
+            if computer + 1 == user or computer - 2 == user:
+                print(f'Well done. Computer chose {self.options[computer]}')
+                self.user_rating += 100
+
+
+RockPaperScissors()
